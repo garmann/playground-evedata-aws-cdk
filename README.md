@@ -27,9 +27,9 @@ pip install -r requirements.txt
 ```
 
 ### files to look at:
-- [setup.py](https://github.com/garmann/playground_evedata_aws_cdk/setup.py)
-- [app.py](https://github.com/garmann/playground_evedata_aws_cdk/app.py)
-- [playground_evedata_aws_cdk_stack.py](https://github.com/garmann/playground_evedata_aws_cdk/playground_evedata_aws_cdk/playground_evedata_aws_cdk_stack.py)
+- [setup.py](setup.py)
+- [app.py](app.py)
+- [playground_evedata_aws_cdk_stack.py](playground_evedata_aws_cdk/playground_evedata_aws_cdk_stack.py)
 
 
 ## planning and open todos:
