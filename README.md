@@ -16,7 +16,7 @@ cdk --version
 mkdir playground-evedata-aws-cdk
 cd playground-evedata-aws-cdk/
 cdk init
-cdk init --language python sample-app
+cdk init --language=python app
 ```
 
 ### prepare the content from this repo:
