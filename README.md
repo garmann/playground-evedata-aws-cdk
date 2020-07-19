@@ -62,11 +62,12 @@ open todos:
   - env
   - other running stacks?
   - resources created from current cdk stack (metadata?)
+- link permissions like it wasd one in intro movie
 - vpc
   - 3 subnets instead of just only two
 - rds security group + ingress rule not working yet
   - currently static as plain text
-  - also try using db_cluster instead of instance, "connections" property allows allow ipv4 function
+  - also try using db_cluster instead of instance, "connections" property allows allow_ipv4 function
 - es domain
   - ip whitelisting automatic + remote home ip as parameter
   - currently static as plain text
