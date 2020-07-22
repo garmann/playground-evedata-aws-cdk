@@ -1,3 +1,5 @@
+import requests, socket
+
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_elasticsearch as elasticsearch,
@@ -11,6 +13,8 @@ class PlaygroundEvedataAwsCdkStack(core.Stack):
     def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
+        r = requests.get("http://ifconfig.me")
+        myip = r.text + "/32"
 
         vpc = ec2.Vpc(self, "VPC",
                       nat_gateways=0,
@@ -27,13 +31,19 @@ class PlaygroundEvedataAwsCdkStack(core.Stack):
         )
 
         sg = ec2.SecurityGroup(self, "greg-sg", vpc=vpc, allow_all_outbound=True)
-        sg.add_ingress_rule(ec2.Peer.ipv4("myip/32"), ec2.Port.tcp(22))
+        # sg.add_ingress_rule(ec2.Peer.ipv4(myip), ec2.Port.tcp(22))
 
         instance = ec2.Instance(self, "greg-ec2",
                                     instance_type=ec2.InstanceType('t3.large'),
                                     machine_image=amzn_linux,
                                     vpc=vpc,
-                                    key_name='gregkey')
+                                    key_name='gregkey', security_group=sg)
+
+
+        core.CfnOutput(self, "output_ssh_bastion_public_ip",
+                       value=instance.instance_public_ip)
+        core.CfnOutput(self, "output_ssh_bastion_private_ip",
+                       value=instance.instance_private_ip)
 
         # es domain helpful links
         # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticsearch-domain.html#cfn-elasticsearch-domain-elasticsearchclusterconfig
@@ -61,7 +71,7 @@ class PlaygroundEvedataAwsCdkStack(core.Stack):
                     "Condition": {
                         "IpAddress": {
                             "aws:SourceIp": [
-                                "myip1/32", "ec2ip1/32", "ec2ip2/32"
+                                myip, instance.instance_public_ip, instance.instance_private_ip
                             ]
                         }
                     },
@@ -92,22 +102,22 @@ class PlaygroundEvedataAwsCdkStack(core.Stack):
         #                                                 cidrip="10.0.0.0/8",
         #                                                 db_security_group_name="greg-dbsg"
         # )
-
-        # https://github.com/aws-samples/aws-cdk-examples/blob/master/python/rds/app.py
-        db = rds.DatabaseInstance(
-            self, "RDS",
-            master_username="XXakjsfhajdshflkadshfk",
-            master_user_password=core.SecretValue.plain_text("XXakjsfhajdshasdasdakjsd"),
-            database_name="evedata",
-            engine_version="8.0.16",
-            engine=rds.DatabaseInstanceEngine.MYSQL,
-            vpc=vpc,
-            port=3306,
-            instance_type=ec2.InstanceType.of(
-                ec2.InstanceClass.MEMORY4,
-                ec2.InstanceSize.LARGE,
-            ),
-            removal_policy=core.RemovalPolicy.DESTROY,
-            deletion_protection=False,
-            #security_groups=db_sg
-        )
+        #
+        # # https://github.com/aws-samples/aws-cdk-examples/blob/master/python/rds/app.py
+        # db = rds.DatabaseInstance(
+        #     self, "RDS",
+        #     master_username="XXakjsfhajdshflkadshfk",
+        #     master_user_password=core.SecretValue.plain_text("XXakjsfhajdshasdasdakjsd"),
+        #     database_name="evedata",
+        #     engine_version="8.0.16",
+        #     engine=rds.DatabaseInstanceEngine.MYSQL,
+        #     vpc=vpc,
+        #     port=3306,
+        #     instance_type=ec2.InstanceType.of(
+        #         ec2.InstanceClass.MEMORY4,
+        #         ec2.InstanceSize.LARGE,
+        #     ),
+        #     removal_policy=core.RemovalPolicy.DESTROY,
+        #     deletion_protection=False,
+        #     #security_groups=db_sg
+        # )

@@ -23,7 +23,8 @@ setuptools.setup(
         "aws-cdk.aws-ec2",
         "aws-cdk.aws-iam",
         "aws-cdk.aws-elasticsearch",
-        "aws-cdk.aws-rds"
+        "aws-cdk.aws-rds",
+        "requests"
     ],
 
     python_requires=">=3.6",
