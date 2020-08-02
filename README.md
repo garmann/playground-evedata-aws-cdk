@@ -17,14 +17,16 @@ mkdir playground-evedata-aws-cdk
 cd playground-evedata-aws-cdk/
 cdk init
 cdk init --language=python app
-```
-
-### prepare the content from this repo:
-```
 python3 -m venv .env
 source .env/bin/activate
 pip install -r requirements.txt
 ```
+
+### deploy stack
+```
+cdk deploy
+```
+
 
 ### files to look at:
 - [setup.py](setup.py)
@@ -48,7 +50,6 @@ elasticsearch:
   - can i add parameters into cdk deploy to specify my ip?
 
 notes:
-- region = eu-central-1
 - default vpc
 - evedata source will not exposed in this repo
 
@@ -58,22 +59,8 @@ open todos:
   - existing aws services
     - vpcips = names, ids
     - ec2 instances = internal and external ip
-  - shell cli parameters
-  - env
-  - other running stacks?
-  - resources created from current cdk stack (metadata?)
-- link permissions like it wasd one in intro movie
-- vpc
-  - 3 subnets instead of just only two
-- rds security group + ingress rule not working yet
-  - currently static as plain text
-  - also try using db_cluster instead of instance, "connections" property allows allow_ipv4 function
-- es domain
-  - ip whitelisting automatic + remote home ip as parameter
-  - currently static as plain text
-- evedata
-  - upgrade PyMySQL, SQLAlchemy
-  - es listens on port 80, connections string with scheme
+
+
 
 example run of trade calculation:
 ```

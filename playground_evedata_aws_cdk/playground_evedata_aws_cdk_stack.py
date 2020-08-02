@@ -34,7 +34,7 @@ class PlaygroundEvedataAwsCdkStack(core.Stack):
         # sg.add_ingress_rule(ec2.Peer.ipv4(myip), ec2.Port.tcp(22))
 
         instance = ec2.Instance(self, "greg-ec2",
-                                    instance_type=ec2.InstanceType('t3.large'),
+                                    instance_type=ec2.InstanceType('c5.xlarge'),
                                     machine_image=amzn_linux,
                                     vpc=vpc,
                                     key_name='gregkey', security_group=sg)
@@ -53,7 +53,7 @@ class PlaygroundEvedataAwsCdkStack(core.Stack):
 
         es_cluster_config = {
             "InstanceCount": 3,
-            "InstanceType": "m4.large.elasticsearch",
+            "InstanceType": "m4.xlarge.elasticsearch",
             "DedicatedMasterEnabled": True,
             "DedicatedMasterCount": 3
         }
@@ -81,7 +81,7 @@ class PlaygroundEvedataAwsCdkStack(core.Stack):
         }
         es_storage = {
                 "ebsEnabled": True,
-                "volumeSize": 30,
+                "volumeSize": 50,
                 "volumeType": "gp2"
         }
 
@@ -91,7 +91,16 @@ class PlaygroundEvedataAwsCdkStack(core.Stack):
                                                 ebs_options=es_storage,
                                                 )
 
+        core.CfnOutput(self, "output_es_domain_endpoint",
+                       value=es_domain.attr_domain_endpoint)
 
+
+        # play with vpc attr import
+        # https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_ec2/Vpc.html
+        # - from_lookup
+        # - from_vpc_attributes
+        # lookup_vpc = ec2.Vpc.from_lookup(self, "defaultstuff", vpc_id="vpc-964376fd")
+        # print(lookup_vpc.vpc_cidr_block)
 
         # db_sg = rds.CfnDBSecurityGroup(self, 'greg-dbsg',
         #                                ec2_vpc_id=vpc,
